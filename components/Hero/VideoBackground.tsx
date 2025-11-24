@@ -38,7 +38,7 @@ export default function VideoBackground({
         playing={isPlaying}
         muted={true}
         loop={false}
-        playsinline
+        playsinline={true}
         width="100%"
         height="100%"
         className="absolute inset-0 object-cover"
@@ -50,6 +50,10 @@ export default function VideoBackground({
         config={{
           file: {
             attributes: {
+              autoplay: true,
+              playsInline: true,
+              muted: true,
+              loop: false,
               style: {
                 width: "100%",
                 height: "100%",
@@ -57,6 +61,19 @@ export default function VideoBackground({
               },
             },
           },
+        }}
+        onReady={() => {
+          // Force play on mobile devices
+          if (playerRef.current?.getInternalPlayer()) {
+            const internalPlayer = playerRef.current.getInternalPlayer() as HTMLVideoElement;
+            if (internalPlayer) {
+              internalPlayer.play().catch((error) => {
+                console.log("Autoplay prevented:", error);
+                // Try to play again after user interaction
+                setIsPlaying(true);
+              });
+            }
+          }
         }}
         onProgress={(progress) => {
           // Reset to start when reaching 35 seconds

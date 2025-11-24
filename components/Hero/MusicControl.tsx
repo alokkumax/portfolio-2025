@@ -147,7 +147,7 @@ export default function MusicControl() {
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("waiting", handleWaiting);
     };
-  }, [currentTrackIndex, currentTrack?.url, isMounted]);
+  }, [currentTrackIndex, currentTrack, isMounted, isMuted, volume]);
 
   // Handle play/pause
   useEffect(() => {
@@ -282,26 +282,26 @@ export default function MusicControl() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-black/30 backdrop-blur-md rounded-lg border border-white/20 px-4 py-3 flex items-center gap-4 shadow-2xl"
+              className="bg-black/30 backdrop-blur-md rounded-lg border border-white/20 px-3 py-2 md:px-4 md:py-3 flex items-center gap-2 md:gap-4 shadow-2xl max-w-[calc(100vw-2rem)] md:max-w-none"
             >
               {/* Play/Pause Button */}
               <button
                 onClick={togglePlay}
                 aria-label={isPlaying ? "Pause" : "Play"}
-                className="w-10 h-10 flex items-center justify-center text-white hover:text-brand-red transition-colors"
+                className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center text-white hover:text-brand-red transition-colors flex-shrink-0"
               >
                 {isPlaying ? (
-                  <Pause className="w-5 h-5" />
+                  <Pause className="w-4 h-4 md:w-5 md:h-5" />
                 ) : (
-                  <Play className="w-5 h-5 ml-0.5" />
+                  <Play className="w-4 h-4 md:w-5 md:h-5 ml-0.5" />
                 )}
               </button>
 
               {/* Track Info */}
               {currentTrack && (
-                <div className="min-w-0 max-w-[200px] relative">
-                  <p className="text-white text-sm font-semibold truncate">
-                    {currentTrack.title}
+                <div className="min-w-0 max-w-[120px] md:max-w-[200px] relative">
+                  <p className="text-white text-xs md:text-sm font-semibold truncate">
+                    {isLoading ? "Loading..." : currentTrack.title}
                   </p>
                   <SoundWave isPlaying={isPlaying && !isLoading} />
                   {isLoading && (
@@ -313,20 +313,20 @@ export default function MusicControl() {
               )}
 
               {/* Controls */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 md:gap-2">
                 <button
                   onClick={previousTrack}
                   aria-label="Previous track"
-                  className="p-2 text-white hover:text-brand-red transition-colors"
+                  className="p-1.5 md:p-2 text-white hover:text-brand-red transition-colors flex-shrink-0"
                 >
-                  <SkipBack className="w-4 h-4" />
+                  <SkipBack className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </button>
                 <button
                   onClick={nextTrack}
                   aria-label="Next track"
-                  className="p-2 text-white hover:text-brand-red transition-colors"
+                  className="p-1.5 md:p-2 text-white hover:text-brand-red transition-colors flex-shrink-0"
                 >
-                  <SkipForward className="w-4 h-4" />
+                  <SkipForward className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </button>
               </div>
 
@@ -334,21 +334,21 @@ export default function MusicControl() {
               <button
                 onClick={() => setIsMuted(!isMuted)}
                 aria-label={isMuted ? "Unmute" : "Mute"}
-                className="p-2 text-white hover:text-brand-red transition-colors"
+                className="p-1.5 md:p-2 text-white hover:text-brand-red transition-colors flex-shrink-0"
               >
                 {isMuted ? (
-                  <VolumeX className="w-4 h-4" />
+                  <VolumeX className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 ) : (
-                  <Volume2 className="w-4 h-4" />
+                  <Volume2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 )}
               </button>
 
               {/* Minimize Button */}
               <button
                 onClick={() => setIsMinimized(true)}
-                className="p-2 text-white hover:text-brand-red transition-colors"
+                className="p-1.5 md:p-2 text-white hover:text-brand-red transition-colors flex-shrink-0"
               >
-                <Minimize2 className="w-4 h-4" />
+                <Minimize2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
               </button>
             </motion.div>
           )}

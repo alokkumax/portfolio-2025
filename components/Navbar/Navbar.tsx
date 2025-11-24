@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import DropdownMenu from "./DropdownMenu";
 import { NavItem } from "@/types";
 
@@ -94,6 +95,7 @@ const navItems: NavItem[] = [
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const pathname = usePathname();
 
   return (
@@ -110,12 +112,16 @@ export default function Navbar() {
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-2 py-1 rounded-lg"
-              style={{ backgroundColor: "#c03540" }}
+              className="relative h-10 w-auto"
             >
-              <span className="text-white font-semibold text-base uppercase tracking-wide">
-                KUMAX
-              </span>
+              <Image
+                src="/images/logo.png"
+                alt="Kumax Logo"
+                width={120}
+                height={40}
+                className="h-10 w-auto object-contain"
+                priority
+              />
             </motion.div>
           </Link>
 
@@ -176,26 +182,50 @@ export default function Navbar() {
                 {item.href ? (
                   <Link
                     href={item.href}
-                    className="block text-white font-semibold uppercase text-sm py-2 hover:text-brand-red transition-colors"
+                    className={`block font-semibold uppercase text-sm px-3 py-2 rounded-full transition-colors ${
+                      pathname === item.href
+                        ? "bg-white text-black"
+                        : "text-white hover:text-brand-red"
+                    }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
                   </Link>
                 ) : (
                   <div className="space-y-2">
-                    <div className="text-white font-semibold uppercase text-sm py-2">
-                      {item.label}
-                    </div>
-                    {item.dropdown?.map((dropdownItem, idx) => (
-                      <Link
-                        key={idx}
-                        href={dropdownItem.href}
-                        className="block text-gray-400 text-sm pl-4 py-1 hover:text-brand-red transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                    <button
+                      onClick={() => setOpenDropdown(openDropdown === index ? null : index)}
+                      className="flex items-center justify-between w-full text-white font-semibold uppercase text-sm py-2 hover:text-brand-red transition-colors"
+                    >
+                      <span>{item.label}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          openDropdown === index ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {openDropdown === index && item.dropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-1 pl-4"
                       >
-                        {dropdownItem.label}
-                      </Link>
-                    ))}
+                        {item.dropdown.map((dropdownItem, idx) => (
+                          <Link
+                            key={idx}
+                            href={dropdownItem.href}
+                            className="block text-gray-400 text-sm py-1 hover:text-brand-red transition-colors"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            {dropdownItem.label}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
                   </div>
                 )}
               </div>
