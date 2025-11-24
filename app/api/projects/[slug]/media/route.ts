@@ -4,10 +4,10 @@ import path from "path";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
     const projectPrefix = slug.split("-")[0]; // e.g., "zensu" from "zensu-ecommerce"
     
     const imagesDir = path.join(process.cwd(), "public", "images");
