@@ -134,8 +134,10 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href={item.href || "#"}
-                    className={`text-white font-semibold uppercase text-sm px-3 py-1.5 rounded-full transition-all hover:bg-white hover:text-black ${
-                      pathname === item.href ? "bg-white text-black" : ""
+                    className={`font-semibold uppercase text-sm px-3 py-1.5 rounded-full transition-all hover:bg-white hover:text-black ${
+                      pathname === item.href 
+                        ? "bg-white text-black" 
+                        : "text-white"
                     }`}
                   >
                     {item.label}
